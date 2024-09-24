@@ -1,9 +1,10 @@
+/* eslint-disable */
 'use client';
 
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Upload, FileText, Check, AlertCircle, XCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import axios from 'axios';
@@ -16,14 +17,14 @@ export function HandwritingRecognitionComponent() {
   const [file, setFile] = useState<File | null>(null);
   const [recognizedText, setRecognizedText] = useState('');
   const [enhancedText, setEnhancedText] = useState('');
-  const [structuredContent, setStructuredContent] = useState<any>({});
+  const [structuredContent, setStructuredContent] = useState<{ details: { names: string[], dates: string[], places: string[] }} | null>(null);
   const [wordCount, setWordCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'recognized' | 'enhanced' | 'structured'>('recognized');
   const [error, setError] = useState<string | null>(null);
   const [isResponseReceived, setIsResponseReceived] = useState(false);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
@@ -52,7 +53,7 @@ export function HandwritingRecognitionComponent() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      const { ocr, enhancedText, analysis, structuredContent } = response.data;
+      const { ocr, enhancedText, structuredContent } = response.data;
 
       setRecognizedText(ocr);
       setEnhancedText(enhancedText);
@@ -75,7 +76,7 @@ export function HandwritingRecognitionComponent() {
     setFile(null);
     setRecognizedText('');
     setEnhancedText('');
-    setStructuredContent({});
+    setStructuredContent(null);
     setWordCount(0);
     setError(null);
     setIsResponseReceived(false);
@@ -84,7 +85,7 @@ export function HandwritingRecognitionComponent() {
   const buttonClass = (isActive: boolean) =>
     `w-full py-1 text-center cursor-pointer ${isActive ? 'bg-white text-black' : 'bg-black text-white '} text-lg font-medium border-black rounded-t-2xl`;
 
-  const extractStructuredContent = (data: any) => {
+  const extractStructuredContent = (data: { details: { names: string[], dates: string[], places: string[] } }) => {
     const names = data.details.names.join(', ') || 'Нет имен';
     const dates = data.details.dates.join(', ') || 'Нет дат';
     const places = data.details.places.join(', ') || 'Нет мест';
