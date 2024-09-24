@@ -308,3 +308,13 @@
 {"level":"info","message":"Creating structured content.","service":"user-service","timestamp":"2024-09-25 03:51:10"}
 {"level":"info","message":"Text analysis and structuring completed.","service":"user-service","timestamp":"2024-09-25 03:51:10"}
 {"level":"info","message":"::1 - - [24/Sep/2024:22:51:10 +0000] \"POST /api/ocr/upload HTTP/1.1\" 200 11006 \"http://localhost:3000/\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","service":"user-service","timestamp":"2024-09-25 03:51:10"}
+{"level":"info","message":"Server started on port 5000","service":"user-service","timestamp":"2024-09-25 04:10:27"}
+{"level":"info","message":"MongoDB Connected","service":"user-service","timestamp":"2024-09-25 04:10:30"}
+{"level":"info","message":"Received image buffer for processing.","service":"user-service","timestamp":"2024-09-25 04:10:36"}
+{"level":"info","message":"Text detection from image completed.","service":"user-service","timestamp":"2024-09-25 04:10:37"}
+{"level":"info","message":"Text enhancement completed with OpenAI.","service":"user-service","timestamp":"2024-09-25 04:10:43"}
+{"level":"info","message":"Text enhancement completed using OpenAI.","service":"user-service","timestamp":"2024-09-25 04:10:43"}
+{"level":"info","message":"Text analysis completed using compromise.","service":"user-service","timestamp":"2024-09-25 04:10:43"}
+{"level":"info","message":"Creating structured content.","service":"user-service","timestamp":"2024-09-25 04:10:43"}
+{"level":"info","message":"Text analysis and structuring completed.","service":"user-service","timestamp":"2024-09-25 04:10:43"}
+{"level":"info","message":"::1 - - [24/Sep/2024:23:10:43 +0000] \"POST /api/ocr/upload HTTP/1.1\" 200 5203 \"http://localhost:3000/\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\"","service":"user-service","timestamp":"2024-09-25 04:10:43"}

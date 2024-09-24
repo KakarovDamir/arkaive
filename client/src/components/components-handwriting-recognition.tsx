@@ -8,6 +8,7 @@ import { Upload, FileText, Check, AlertCircle, XCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import axios from 'axios';
 import { useTranslations } from 'next-intl';
+import NextImage from 'next/image';
 
 export function HandwritingRecognitionComponent() {
   const t = useTranslations('Recognition');
@@ -113,7 +114,13 @@ export function HandwritingRecognitionComponent() {
           {image && (
             <>
               <div className="mt-4 flex justify-center lg:justify-start">
-                <img src={image} alt="Загруженное изображение" className="w-full max-h-80 object-contain rounded-lg shadow-lg" />
+                <div className="relative w-full max-h-80">
+                  {typeof image === 'string' && image.startsWith('data:') ? (
+                    <img src={image} alt="Загруженное изображение" className="w-full max-h-80 object-contain rounded-lg shadow-lg" />
+                  ) : (
+                    <NextImage src={image} alt="Загруженное изображение" layout="fill" objectFit="contain" className="w-full max-h-80 object-contain rounded-lg shadow-lg" />
+                  )}
+                </div>
               </div>
 
               <div className="flex justify-between mt-4">
