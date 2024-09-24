@@ -1,9 +1,5 @@
-import { HandwritingRecognitionComponent } from "@/components/components-handwriting-recognition";
+import {redirect} from 'next/navigation';
 
-export default function Home() {
-  return (
-    <div>
-      <HandwritingRecognitionComponent/>
-    </div>
-  );
+export default function RootPage() {
+  redirect('/eng');
 }

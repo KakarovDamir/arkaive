@@ -1,0 +1,26 @@
+{
+    "Index": {
+        "title": "Let's save history together!", 
+        "text": "Our system provides accurate recognition and digitization of handwritten historical documents, including Kazakh texts, using advanced technology for reliable text processing and preservation." 
+    },
+    "Recognition": {
+        "upload": "Click to download",
+        "upload2": "or drag and drop file",
+        "upload3": "PNG, JPG or JPEG",
+        "loading": "Recognizing...",
+        "button1": "Recognize text",
+        "button2": "Reset",
+        "error": "Error",
+        "cat1": "Text",
+        "cat2": "AI+",
+        "cat3": "Attributes",
+        "count": "Word count:",
+        "copy": "Copy text"
+    },
+    "Footer": {
+        "aboutUs": "About the project",
+        "p5": "We are developing a system for recognizing and restoring handwritten text in historical documents for a hackathon organized by the Presidential Archives. The goal is to preserve cultural heritage using modern OCR and machine learning technologies.",
+        "teamMembers": "Our team",
+        "teamName": "Team name"
+    }
+} 
