@@ -64,6 +64,12 @@ export function HandwritingRecognitionComponent() {
       setStructuredContent(structuredContent);
       setWordCount(ocr.split(' ').length);
       setIsResponseReceived(true);
+      
+      await downloadWordFile(); // Download word file from /to_docx endpoint
+
+      // Additional request to /api/restore
+      await restoreAndDownloadFile();
+      
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         setError(`Произошла ошибка при распознавании текста: ${err.response.data.message || err.response.data}`);
@@ -108,6 +114,30 @@ export function HandwritingRecognitionComponent() {
       document.body.removeChild(link);
     } catch (error) {
       setError(`Произошла ошибка при скачивании файла: ${error}`);
+    }
+  };
+
+  const restoreAndDownloadFile = async () => {
+    if (!ocrData) {
+      console.error('Данные OCR не были загружены');
+      return;
+    }
+    try {
+      const response = await axios.post('https://back.navcer.cl/api/restore', ocrData, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const fileUrl = response.data.file_url;
+
+      // Создаем элемент ссылки для скачивания файла
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.setAttribute('download', 'restored_content.docx');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      setError(`Произошла ошибка при восстановлении файла: ${error}`);
     }
   };
 
