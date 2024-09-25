@@ -5,7 +5,7 @@ import { useState, ChangeEvent } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { Upload, FileText, Check, AlertCircle, XCircle } from 'lucide-react';
+import { Upload, FileText, Check, AlertCircle, XCircle, Download } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import axios from 'axios';
 import { useTranslations } from 'next-intl';
@@ -17,6 +17,7 @@ export function HandwritingRecognitionComponent() {
   const [file, setFile] = useState<File | null>(null);
   const [recognizedText, setRecognizedText] = useState('');
   const [enhancedText, setEnhancedText] = useState('');
+  const [ocrData, setOcrData] = useState<any>(null);
   const [structuredContent, setStructuredContent] = useState<{ details: { names: string[], dates: string[], places: string[] }} | null>(null);
   const [wordCount, setWordCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +38,7 @@ export function HandwritingRecognitionComponent() {
     }
   };
 
+
   const recognizeAndAnalyzeText = async () => {
     setIsLoading(true);
     setError(null);
@@ -49,13 +51,15 @@ export function HandwritingRecognitionComponent() {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await axios.post('http://localhost:5000/api/ocr/upload', formData, {
+      const response = await axios.post('https://back.navcer.cl/api/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
+      const data = response.data;
       const { ocr, enhancedText, structuredContent } = response.data;
 
       setRecognizedText(ocr);
+      setOcrData(data);
       setEnhancedText(enhancedText);
       setStructuredContent(structuredContent);
       setWordCount(ocr.split(' ').length);
@@ -80,6 +84,31 @@ export function HandwritingRecognitionComponent() {
     setWordCount(0);
     setError(null);
     setIsResponseReceived(false);
+  };
+
+  const downloadWordFile = async () => {
+    if (!ocrData) {
+      console.error('Данные OCR не были загружены');
+      return;
+    }
+
+    try {
+      const response = await axios.post('https://back.navcer.cl/api/to_docx', ocrData, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const fileUrl = response.data.file_url;
+
+      // Создаем элемент ссылки для скачивания файла
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.setAttribute('download', 'structured_content.docx');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      setError(`Произошла ошибка при скачивании файла: ${error}`);
+    }
   };
 
   const buttonClass = (isActive: boolean) =>
@@ -195,6 +224,12 @@ export function HandwritingRecognitionComponent() {
                 </div>
               )}
             </div>
+
+            {structuredContent && (
+              <Button onClick={downloadWordFile} className="w-full bg-green-600 text-white mt-4">
+                <Download className="mr-2 h-4 w-4" /> {t('download')}
+              </Button>
+            )}
           </div>
         )}
       </CardContent>

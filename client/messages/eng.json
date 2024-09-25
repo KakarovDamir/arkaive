@@ -15,7 +15,8 @@
         "cat2": "AI+",
         "cat3": "Attributes",
         "count": "Word count:",
-        "copy": "Copy text"
+        "copy": "Copy text",
+        "download": "Download Word"
     },
     "Footer": {
         "aboutUs": "About the project",
