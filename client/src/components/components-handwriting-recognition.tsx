@@ -51,7 +51,7 @@ export function HandwritingRecognitionComponent() {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await axios.post('http://localhost:3000/api/upload', formData, {
+      const response = await axios.post('http://localhost:8000/api/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -99,7 +99,7 @@ export function HandwritingRecognitionComponent() {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/api/to_docx', ocrData, {
+      const response = await axios.post('http://localhost:8000/api/to_docx', ocrData, {
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -123,7 +123,7 @@ export function HandwritingRecognitionComponent() {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:3000/api/restore', ocrData, {
+      const response = await axios.post('http://localhost:8000/api/restore', ocrData, {
         headers: { 'Content-Type': 'application/json' },
       });
 
