@@ -1,0 +1,28 @@
+{
+    "status": "success",
+    "ocr": "везде брать\nплате, ч\nречисление по встрьсы\nكل\n6.61\nMen CS GRSTOEL pa00fbx sacer saga\n22 280*200 HOD BRAT CHHUGIN HEROCITOчNO STO BACHTERO\nо то... что в Рим очи по заявленият на\nHOBBITIONS 3a Is 303, BOTBIG\nЗарић уласна проули в это.. году уволненится пролив чуйного года\nAkane Loveπb_e_sum marbor OTIM BOHDOGGM\nBomplete port Bus.re Packtoona, mony atorga Apa\nпод ропсь руса..де с\nСУЗЯВ\nИмелия е\n*Camila 127 me ne NOTAT PY306 0 tabama.lī –\nодно квартире, парво - хаитересно ще... нудно БОЯТЬСЯ за\nD\nа так не резины и запасные\nобрблюд в те, кторис делимы были получить, че ст\nпро товарова и увябре\nՃ 33 111 50 ՍՄ Ե:\nДомой Скорик ваби расслы, после че\nОБТ пател стразываться от биоло\nOD TO OG FOAT:V\nCosafA ILIDAD, Hеi A nu.\nManne\nобратить на это су\npupons Re Ga ipon, 200\nководстве.\nсобености элетростанции об осьо\nCO\" SET BỊTHE YOLUBIA IN Moba, 0.20GB 24ROM SUGMENTE\nодно, что от таких рабочих молод\nпи промоводстве сколько\nT. TUE HOMb_get_cUEET U 10OOLLOOGTE (HIGH\nCIBCTBY 198\nцель ос\nT\nв нача\nORB 30000 02a, to\nJymno, hlaILDO, & H\nВодстве Производством.\nBauseln Cuz I BUACTSCHHO\nG\n1800030-J. Vac-Ba2 yenuBLE tens t0€ 02.B-\nPO NJE YARDS I PER",
+    "enhancedText": "Везде брать плату, перечисление по встречам.\n\n6.61\nMen CS GRSTOEL pa00fbx sacer saga\n22 280*200 HOD BRAT CHHUGIN HEROCITOчNO STO BACHTERO\n\nТо, что в Рим по заявлениям на\nHOBBITIONS 3a Is 303, BOTBIG\n\nЗарич уласна проули в этом году, уволенится пролив чуйного года.\nAkane Loveπb_e_sum marbor OTIM BOHDOGGM\n\nComplete port Bus.re Packtoona, many atorga Apa\nпод ропсь руса..де с\nСУЗЯВ\n\nИмелия е\n*Camila 127 me ne NOTAT PY306 0 tabama.lī –\nодно квартире, парво - хаитересно ще... нудно БОЯТЬСЯ за\n\nа так не резины и запасные\nобрблюд в те, кторис делимы были получить, че ст\nпро товарова и увябре\n\nДомой Скорик ваби расслы, после че\nОБТ пател стразываться от биоло\nOD TO OG FOAT:V\nCosafA ILIDAD, Hеi A nu.\nManne\nобратить на это су\npupons Re Ga ipon, 200\nководстве.\n\nособенности электростанции об осьо\nCO\" SET BỊTHE YOLUBIA IN Moba, 0.20GB 24ROM SUGMENTE\nодно, что от таких рабочих молод\nпи производстве сколько\nT. TUE HOMb_get_cUEET U 10OOLLOOGTE (HIGH\nCIBCTBY 198\nцель ос\nT\nв нача\nORB 30000 02a, to\nJymno, hlaILDO, & H\nВодстве Производством.\nBauseln Cuz I BUACTSCHHO\nG\n1800030-J. Vac-Ba2 yenuBLE tens t0€ 02.B-\nPO NJE YARDS I PER",
+    "analysis": {
+        "attributes": {
+            "names": [
+                "*Camila"
+            ],
+            "dates": [],
+            "places": [
+                "Ga"
+            ]
+        }
+    },
+    "structuredContent": {
+        "summary": "Найдено 1 имен, 0 дат, и 1 мест.",
+        "details": {
+            "names": [
+                "*Camila"
+            ],
+            "dates": [],
+            "places": [
+                "Ga"
+            ]
+        }
+    }
+}
