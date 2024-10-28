@@ -1,12 +1,8 @@
-import os
 import json
 
-from django.http import JsonResponse, HttpResponse
-from django.conf import settings
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-
-from requests import post
 
 from docx import Document
 from api.ocr import process_image 

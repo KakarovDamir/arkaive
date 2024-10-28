@@ -23,7 +23,6 @@ def sharpness(image):
     return image    
 
 
-
 def bright_contrast(image):
     # Adjust the brightness and contrast  
     # g(i,j)=α⋅f(i,j)+β 
