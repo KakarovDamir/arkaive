@@ -5,7 +5,6 @@ urlpatterns = [
     path("healthcheck", views.healthcheck),
     path("upload", views.upload),
     path("restore", views.restore),
-    # path("to_pdf", views.to_pdf),
     path("to_docx", views.to_docx),
 
 

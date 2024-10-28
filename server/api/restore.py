@@ -1,22 +1,6 @@
 import cv2 as cv
 import numpy as np
 
-# def redness(image, k):
-#     # Add red color to the BGR image
-#     image[:, :, 2] = image[:, :, 2] * k
-#     return image
-
-
-# def greenness(image, k):
-#     # Add green color to the BGR image
-#     image[:, :, 1] = image[:, :, 1] * k
-#     return image
-
-
-# def blueness(image, k):
-#     # Add blue color to the BGR image
-#     image[:, :, 0] = image[:, :, 0] * k
-#     return image
 HSV_ADJUSTMENT = True
 
 
@@ -168,8 +152,6 @@ def more_red(image):
 def enchance(file_buffer):
     image = get_opencv_img_from_buffer(file_buffer, cv.IMREAD_COLOR)
 
-    dominant_color = detect_dominant(image)
-    print(dominant_color)
 
     image = invert(image)
 
@@ -195,39 +177,6 @@ def enchance(file_buffer):
 def enhance_to_bytes(file_buffer):
     image = enchance(file_buffer)
     return cv.imencode('.png', image)[1].tobytes()
-
-
-
-def detect_dominant(image):
-    hsv = cv.cvtColor(image, cv.COLOR_BGR2HSV)
-
-    color_ranges = {
-        'red': [(0, 50, 50), (10, 255, 255)],    # Red
-        'green': [(36, 50, 50), (86, 255, 255)], # Green
-        'blue': [(94, 50, 50), (126, 255, 255)], # Blue
-        'black': [(0, 0, 0), (180, 255, 30)]     # Black
-    }
-
-    # Dictionary to store pixel counts for each color
-    color_pixel_count = {}
-
-    # Loop through each color range and create masks
-    for color, (lower, upper) in color_ranges.items():
-        lower_bound = np.array(lower)
-        upper_bound = np.array(upper)
-        
-        # Create mask for the color
-        mask = cv.inRange(hsv, lower_bound, upper_bound)
-        
-        # Count non-zero pixels in the mask (i.e., pixels of the color)
-        color_pixel_count[color] = cv.countNonZero(mask)
-
-    # Find the most dominant color
-    dominant_color = max(color_pixel_count, key=color_pixel_count.get)
-    return dominant_color
-
-
-
 
 
 

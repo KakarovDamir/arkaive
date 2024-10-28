@@ -115,25 +115,3 @@ def swap_hsv_adjustment(request):
     global HSV_ADJUSTMENT
     HSV_ADJUSTMENT = not HSV_ADJUSTMENT
     return JsonResponse({"hsv_adjustment": HSV_ADJUSTMENT})
-
-
-
-
-
-# @require_http_methods(["POST"])
-# @csrf_exempt
-# def to_pdf(request):
-#     data = json.loads(request.body)
-#     key = docx(data)
-#     new_key = key.replace('.docx', '.pdf')
-    
-#     convertapi.api_secret = settings.CONVERT_API_SECRET
-#     convertapi.api_credentials = settings.CONVERT_API_CREDENTIALS
-#     print("Secret:", convertapi.api_secret)
-#     convertapi.convert('pdf', {
-#         'File': 'media/'+key
-#     }, from_format = 'docx').save_files('media/'+new_key)
-
-
-#     file_url = s3.upload_file("media/"+new_key, new_key)
-#     return JsonResponse({"file_url": file_url})
