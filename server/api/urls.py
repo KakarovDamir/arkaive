@@ -8,6 +8,6 @@ urlpatterns = [
     path("to_docx", views.to_docx),
 
 
-    path("swap_auto_enchance", views.swap_auto_enchance),
+    path("swap_auto_enhance", views.swap_auto_enhance),
     path("swap_hsv_adjustment", views.swap_hsv_adjustment),
 ]

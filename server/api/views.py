@@ -10,10 +10,10 @@ from requests import post
 
 from docx import Document
 from api.ocr import process_image 
-from api.restore import enhance_to_bytes, enchance_and_save, HSV_ADJUSTMENT
+from api.restore import enhance_to_bytes, enhance_and_save, HSV_ADJUSTMENT
 from api import s3
 
-AUTO_ENCHANCE = True
+AUTO_ENHANCE = True
 
 @csrf_exempt
 def healthcheck(request):
@@ -25,7 +25,7 @@ def healthcheck(request):
 def upload(request):
     uploaded_file = request.FILES['file']
 
-    if AUTO_ENCHANCE:
+    if AUTO_ENHANCE:
         image = enhance_to_bytes(uploaded_file)
     else:
         image = uploaded_file.read()
@@ -43,14 +43,14 @@ def upload(request):
 def restore(request):
     key = s3.generate_key('image', 'jpg', 'file.jpg')
     path = "media/"+key
-    enchance_and_save(request.FILES['file'], path)
+    enhance_and_save(request.FILES['file'], path)
     file_url = s3.upload_file(path, key)
     return JsonResponse({"file_url": file_url})
 
 
 def extract_fields(data):
     ocr = data.get('ocr')
-    enchanced_text = data.get('enhancedText')
+    enhanced_text = data.get('enhancedText')
 
     analysis = data.get('analysis')
     attributes = analysis.get('attributes')
@@ -67,7 +67,7 @@ def extract_fields(data):
 
     return {
         "OCR": ocr,
-        "Enchanced text": enchanced_text,
+        "Enhanced text": enhanced_text,
         "Attributes/names": attributes_names,
         "Attributes/dates": attributes_dates,
         "Attributes/places": attributes_places,
@@ -103,10 +103,10 @@ def to_docx(request):
 
 @require_http_methods(["GET"])
 @csrf_exempt
-def swap_auto_enchance(request):
-    global AUTO_ENCHANCE
-    AUTO_ENCHANCE = not AUTO_ENCHANCE
-    return JsonResponse({"enchance_mode": AUTO_ENCHANCE})
+def swap_auto_enhance(request):
+    global AUTO_ENHANCE
+    AUTO_ENHANCE = not AUTO_ENHANCE
+    return JsonResponse({"enhance_mode": AUTO_ENHANCE})
 
 
 @require_http_methods(["GET"])
