@@ -5,15 +5,19 @@ import { useState, ChangeEvent } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { Upload, FileText, Check, AlertCircle, XCircle, Download } from 'lucide-react';
+import { Upload, FileText, Check, AlertCircle, XCircle, Download, Image as ImageIcon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import axios from 'axios';
 import { useTranslations } from 'next-intl';
-import NextImage from 'next/image';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function HandwritingRecognitionComponent() {
   const t = useTranslations('Recognition');
-  const [image, setImage] = useState<string | null>(null);
+  const toastTranslations = useTranslations('Recognition');
+
+  const [image, setImage] = useState<string | undefined>(undefined);
+  const [enhancedImage, setEnhancedImage] = useState<string | undefined>(undefined);
   const [file, setFile] = useState<File | null>(null);
   const [recognizedText, setRecognizedText] = useState('');
   const [enhancedText, setEnhancedText] = useState('');
@@ -21,6 +25,7 @@ export function HandwritingRecognitionComponent() {
   const [structuredContent, setStructuredContent] = useState<{ details: { names: string[], dates: string[], places: string[] }} | null>(null);
   const [wordCount, setWordCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
   const [activeTab, setActiveTab] = useState<'recognized' | 'enhanced' | 'structured'>('recognized');
   const [error, setError] = useState<string | null>(null);
   const [isResponseReceived, setIsResponseReceived] = useState(false);
@@ -31,13 +36,38 @@ export function HandwritingRecognitionComponent() {
       setFile(selectedFile);
       const reader = new FileReader();
       reader.onload = (e) => {
-        setImage(e.target?.result as string);
+        setImage(e.target?.result as string | undefined);
+        setEnhancedImage(undefined);
         setError(null);
       };
       reader.readAsDataURL(selectedFile);
     }
   };
 
+  const enhanceImage = async () => {
+    if (!image) {
+      setError(toastTranslations('noImage'));
+      return;
+    }
+  
+    try {
+      setIsEnhancing(true);
+      toast.info(toastTranslations('enhancing'));
+      const formData = new FormData();
+      formData.append('file', file as Blob);
+  
+      const response = await axios.post('http://127.0.0.1:8000/api/restore', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+  
+      setEnhancedImage(response.data.file_url);
+      toast.success(toastTranslations('enhancedSuccess'));
+    } catch (err) {
+      setError(toastTranslations('enhanceError')); 
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
 
   const recognizeAndAnalyzeText = async () => {
     setIsLoading(true);
@@ -45,9 +75,9 @@ export function HandwritingRecognitionComponent() {
     setIsResponseReceived(false);
     try {
       if (!file) {
-        throw new Error('No file selected');
+        throw new Error(toastTranslations('noFile')); 
       }
-
+      toast.info('Recognizing text...');
       const formData = new FormData();
       formData.append('file', file);
 
@@ -64,19 +94,17 @@ export function HandwritingRecognitionComponent() {
       setStructuredContent(structuredContent);
       setWordCount(ocr.split(' ').length);
       setIsResponseReceived(true);
+      toast.success(toastTranslations('recognizedSuccess'));
     } catch (err) {
-      if (axios.isAxiosError(err) && err.response) {
-        setError(`Произошла ошибка при распознавании текста: ${err.response.data.message || err.response.data}`);
-      } else {
-        setError('Произошла ошибка при распознавании текста. Пожалуйста, попробуйте еще раз.');
-      }
+      setError(toastTranslations('recognizeError')); 
     } finally {
       setIsLoading(false);
     }
   };
 
   const resetImage = () => {
-    setImage(null);
+    setImage(undefined);
+    setEnhancedImage(undefined);
     setFile(null);
     setRecognizedText('');
     setEnhancedText('');
@@ -88,7 +116,7 @@ export function HandwritingRecognitionComponent() {
 
   const downloadWordFile = async () => {
     if (!ocrData) {
-      console.error('Данные OCR не были загружены');
+      console.error('No OCR data available');
       return;
     }
 
@@ -99,15 +127,37 @@ export function HandwritingRecognitionComponent() {
 
       const fileUrl = response.data.file_url;
 
-      // Создаем элемент ссылки для скачивания файла
       const link = document.createElement('a');
       link.href = fileUrl;
       link.setAttribute('download', 'structured_content.docx');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
+      toast.success(toastTranslations('wordDownloadSuccess')); 
     } catch (error) {
-      setError(`Произошла ошибка при скачивании файла: ${error}`);
+      // setError(`An error occurred while downloading the file: ${error}`);
+      setError(`${toastTranslations('fileDownloadError')}: ${error}`); // Translated error message
+    }
+  };
+
+  const downloadEnhancedImage = () => {
+    if (!enhancedImage) {
+      console.error('No enhanced image available');
+      return;
+    }
+
+    try {
+      const link = document.createElement('a');
+      link.href = enhancedImage;
+      link.setAttribute('download', 'enhanced_image.jpg');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success(toastTranslations('imageDownloadSuccess')); 
+    } catch (error) {
+      setError(`${toastTranslations('imageDownloadError')}: ${error}`); 
     }
   };
 
@@ -115,11 +165,11 @@ export function HandwritingRecognitionComponent() {
     `w-full py-1 text-center cursor-pointer ${isActive ? 'bg-white text-black' : 'bg-black text-white '} text-lg font-medium border-black rounded-t-2xl`;
 
   const extractStructuredContent = (data: { details: { names: string[], dates: string[], places: string[] } }) => {
-    const names = data.details.names.join(', ') || 'Нет имен';
-    const dates = data.details.dates.join(', ') || 'Нет дат';
-    const places = data.details.places.join(', ') || 'Нет мест';
+    const names = data.details.names.join(', ') || 'No names';
+    const dates = data.details.dates.join(', ') || 'No dates';
+    const places = data.details.places.join(', ') || 'No places';
 
-    return `Имена: ${names}\nДаты: ${dates}\nМеста: ${places}`;
+    return `Names: ${names}\nDates: ${dates}\nPlaces: ${places}`;
   };
 
   return (
@@ -141,20 +191,43 @@ export function HandwritingRecognitionComponent() {
             </div>
           )}
 
-          {image && (
-            <>
-              <div className="mt-4 flex justify-center lg:justify-start">
-                <div className="relative w-full max-h-80">
-                  {typeof image === 'string' && image.startsWith('data:') ? (
-                    <img src={image} alt="Загруженное изображение" className="w-full max-h-80 object-contain rounded-lg shadow-lg" />
-                  ) : (
-                    <NextImage src={image} alt="Загруженное изображение" layout="fill" objectFit="contain" className="w-full max-h-80 object-contain rounded-lg shadow-lg" />
-                  )}
-                </div>
+          {isResponseReceived && (
+            <div>
+              <div className="mt-4 flex justify-center">
+                <img src={image} alt="Uploaded Image" className="max-h-80 object-contain rounded-lg shadow-lg" />
               </div>
 
-              <div className="flex justify-between mt-4">
-                <Button onClick={recognizeAndAnalyzeText} disabled={isLoading} className="w-1/2 bg-blue-600 text-white mr-2">
+              <div className="flex justify-center space-x-2 mt-4">
+                <Button onClick={resetImage} className="bg-black border-4 border-gray-800 text-white">
+                  <XCircle className="mr-2 h-4 w-6" /> {t('button2')}
+                </Button>
+              </div>
+            </div>
+          )}
+          {image && !enhancedImage && !isResponseReceived && (
+            <>
+              <div className="mt-4 flex justify-center">
+                <img src={image} alt="Uploaded Image" className="max-h-80 object-contain rounded-lg shadow-lg" />
+              </div>
+
+              <div className="flex flex-wrap justify-center space-x-2 space-y-2 mt-4">
+                <Button onClick={enhanceImage} disabled={isEnhancing} className="bg-purple-600 text-white mt-2 w-56">
+                  {isEnhancing ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5 mr-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.937l3-2.646z"></path>
+                      </svg>
+                      {t('loading')}
+                    </>
+                  ) : (
+                    <>
+                      <ImageIcon className="mr-2 h-4 w-4" /> {t('enhance')}
+                    </>
+                  )}
+                </Button>
+
+                <Button onClick={recognizeAndAnalyzeText} disabled={isLoading} className="bg-blue-600 text-white mt-2 lg:mt-0 w-60">
                   {isLoading ? (
                     <>
                       <svg className="animate-spin h-5 w-5 mr-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -169,7 +242,26 @@ export function HandwritingRecognitionComponent() {
                     </>
                   )}
                 </Button>
-                <Button onClick={resetImage} className="w-1/2 bg-black border-4 border-gray-800 text-white">
+
+                <Button onClick={resetImage} className="bg-black border-4 border-gray-800 text-white mt-2 lg:mt-0 w-60">
+                  <XCircle className="mr-2 h-4 w-6" /> {t('button2')}
+                </Button>
+              </div>
+            </>
+          )}
+
+          {enhancedImage && (
+            <>
+              <div className="mt-4 flex justify-center lg:justify-start space-x-4">
+                <img src={image} alt="Original Image" className="w-1/2 max-h-80 object-contain rounded-lg shadow-lg" />
+                <img src={enhancedImage} alt="Enhanced Image" className="w-1/2 max-h-80 object-contain rounded-lg shadow-lg" />
+              </div>
+
+              <div className="flex justify-center space-x-2 mt-4">
+                <Button onClick={downloadEnhancedImage} className="bg-green-600 text-white">
+                  <Download className="mr-2 h-4 w-4" /> {t('download2')}
+                </Button>
+                <Button onClick={resetImage} className="bg-black border-4 border-gray-800 text-white">
                   <XCircle className="mr-2 h-4 w-6" /> {t('button2')}
                 </Button>
               </div>
@@ -223,16 +315,17 @@ export function HandwritingRecognitionComponent() {
                   <Textarea value={extractStructuredContent(structuredContent)} readOnly className="w-full h-80 bg-white text-black border-none" />
                 </div>
               )}
-            </div>
 
-            {structuredContent && (
-              <Button onClick={downloadWordFile} className="w-full bg-green-600 text-white mt-4">
-                <Download className="mr-2 h-4 w-4" /> {t('download')}
-              </Button>
-            )}
+              {structuredContent && (
+                <Button onClick={downloadWordFile} className="w-full bg-green-600 text-white mt-4">
+                  <Download className="mr-2 h-4 w-4" /> {t('download')}
+                </Button>
+              )}
+            </div>
           </div>
         )}
       </CardContent>
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
     </Card>
   );
 }
