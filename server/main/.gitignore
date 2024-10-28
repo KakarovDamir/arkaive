@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+hack24-436511-f7b66d33de0a.json
+
 # Distribution / packaging
 .Python
 build/

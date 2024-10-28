@@ -9,7 +9,7 @@ from django.views.decorators.http import require_http_methods
 from requests import post
 
 from docx import Document
-
+from api.ocr import process_image 
 from api.restore import enhance_to_bytes, enchance_and_save, HSV_ADJUSTMENT
 from api import s3
 
@@ -23,20 +23,19 @@ def healthcheck(request):
 @require_http_methods(["POST"])
 @csrf_exempt
 def upload(request):
-    URL = 'https://node.back.navcer.cl/api/ocr/upload'
-
     uploaded_file = request.FILES['file']
+
     if AUTO_ENCHANCE:
-        image = enhance_to_bytes(request.FILES['file'])
+        image = enhance_to_bytes(uploaded_file)
     else:
         image = uploaded_file.read()
 
-    files = {
-        'file': (uploaded_file.name, image),
-        'field': (None, 'value')
-    }
-    reply = post(url=URL, files=files)
-    return JsonResponse(json.loads(reply.text))
+    try:
+        response_data = process_image(image)
+        print(response_data)
+        return JsonResponse(response_data)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
 @require_http_methods(["POST"])

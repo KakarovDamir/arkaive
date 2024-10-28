@@ -14,6 +14,7 @@ from pathlib import Path
 
 import os
 import dotenv
+import path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     "corsheaders",
-    'api'
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -148,6 +149,9 @@ AWS_ACCESS_KEY_ID=os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY=os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_REGION=os.getenv('AWS_REGION')
 AWS_STORAGE_BUCKET_NAME=os.getenv('AWS_STORAGE_BUCKET_NAME')
+
+GOOGLE_CREDENTIALS_PATH = os.path.abspath(os.getenv('GOOGLE_APPLICATION_CREDENTIALS'))
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 CONVERT_API_SECRET=os.getenv('CONVERT_API_SECRET')
 CONVERT_API_CREDENTIALS=os.getenv('CONVERT_API_CREDENTIALS')
